@@ -16,6 +16,7 @@
           <div class="view">
             <input type="checkbox" v-model="todo.completed" class="toggle">
             <label>{{ todo.name }}</label>
+            <button class="destroy" @click.prevent="deleteTodo(todo)"></button>
           </div>
         </li>
       </ul>
@@ -53,12 +54,15 @@ export default {
       })
       this.newTodo = ''
     },
+    deleteTodo(todo) {
+      this.todos = this.todos.filter(e => e !== todo)
+    }
   },
   computed: {
     // eslint-disable-next-line vue/no-dupe-keys
     allDone: {
       get(){
-        return null
+        return this.remaining === 0;
       },
       set(value){
         this.todos.forEach(todo => {
