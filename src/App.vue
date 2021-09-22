@@ -1,5 +1,5 @@
 <template>
-  <Todos/>
+  <Todos v-model="todos"/>
 </template>
 
 <script>
@@ -8,6 +8,22 @@ export default {
   name: 'App',
   components: {
     Todos
+  },
+  data() {
+    return {
+      todos: [{
+        name: 'Demo',
+        completed: true
+      }]
+    }
+  },
+  methods: {
+    addTodo(){
+       this.todos.push({
+         name: 'Jean',
+         completed: false
+       })
+    }
   }
 }
 </script>

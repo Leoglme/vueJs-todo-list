@@ -23,6 +23,8 @@
           <input type="text"
                  class="edit"
                  v-focus="todo === editing"
+                 @blur="doneEdit"
+                 @keyup.esc="cancelEdit"
                  @keyup.enter="doneEdit"
                  v-model="todo.name">
         </li>
@@ -47,13 +49,22 @@
 <script>
 export default {
   name: "Todos",
+  props: {
+    modelValue: {type: Array, default() {return []}}
+  },
   data() {
     return {
       allDone: true,
-      todos: [],
+      todos: this.modelValue,
       newTodo: '',
       filter: 'all',
-      editing: null
+      editing: null,
+      oldTodo: ''
+    }
+  },
+  watch: {
+    value(value) {
+      this.todos = value
     }
   },
   methods: {
@@ -66,15 +77,22 @@ export default {
     },
     deleteTodo(todo) {
       this.todos = this.todos.filter(e => e !== todo)
+      this.$emit('update:modelValue', this.todos)
     },
     deleteCompleted() {
       this.todos = this.todos.filter(todo => !todo.completed)
+      this.$emit('update:modelValue', this.todos)
     },
     editTodo(todo) {
       this.editing = todo;
+      this.oldTodo = todo.name
     },
     doneEdit() {
       this.editing = null;
+    },
+    cancelEdit(){
+      this.editing.name = this.oldTodo
+      this.doneEdit()
     }
   },
   computed: {
